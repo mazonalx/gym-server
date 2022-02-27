@@ -1,13 +1,14 @@
 from pathlib import Path
 import os
 from datetime import timedelta
+import environ
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = 'django-insecure-s(ezg!2s380wp014+wvv@@4t*xnqs(yafhwv0))+esr@*k$^@5'
-
-DEBUG = True
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR,'.env'))
 
 ALLOWED_HOSTS = []
 
@@ -18,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'accounts',
     'customers',
@@ -27,12 +29,17 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
 
 ROOT_URLCONF = 'gym.urls'
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -71,16 +78,16 @@ WSGI_APPLICATION = 'gym.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gym',
-        'USER': 'proxyalx',
-        'PASSWORD': 'zxcv',
-        'HOST': 'localhost',
-        'PORT': 5432
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env('DATABASE_NAME'),
+#         'USER':  env('DATABASE_USER'),
+#         'PASSWORD':  env('DATABASE_PASS'),
+#         'HOST': 'localhost',
+#         'PORT': 5432
+#     }
+# }
 
 
 # Password validation

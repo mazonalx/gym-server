@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import RetrieveAPIView
 
-from customers.models import UserProfile
+from apps.customers.models import UserProfile
 from .serializers import UserProfileSerializer
-from customers.renderers import ProfileJSONRenderer
+from apps.customers.renderers import ProfileJSONRenderer
 from .exceptions import ProfileDoesNotExist
 
 class UserProfileRetrieveAPIView(RetrieveAPIView):

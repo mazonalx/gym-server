@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class CustomersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'customers'
+    name = 'apps.customers'
     
     def ready(self):
-        import customers.signals
+        import apps.customers.signals

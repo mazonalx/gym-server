@@ -21,8 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'accounts',
-    'customers',
+    'apps.accounts',
+    'apps.customers',
+    'apps.blogs',
     'api',
 ]
 

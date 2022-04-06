@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, RegisterSerializer, MyTokenObtainPairSerializer,ChangePasswordSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from accounts.renderers import UserJSONRenderer
+from apps.accounts.renderers import UserJSONRenderer
 from rest_framework import status
 
 CustomUser = get_user_model()

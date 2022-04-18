@@ -1,19 +1,6 @@
-from asyncore import read
+from cgitb import lookup
 from rest_framework import serializers
 from apps.blogs.models import Blog,Vote,Comment
-
-class BlogSerializer(serializers.HyperlinkedModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-    votes = serializers.SerializerMethodField()
-    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    slug = serializers.SlugField(read_only = True)
-
-    class Meta:
-        model = Blog
-        fields = ['title','slug','content','author','created_at','updated_at','votes','comments']
-
-    def get_votes(self, blog):
-        return Vote.objects.filter(blog=blog).count()
 
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +9,18 @@ class VoteSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='author.username')
-
+    blog = serializers.ReadOnlyField(source='blog.slug')
     class Meta:
         model = Comment
-        fields = ['user','content','blog','parent_comment']
+        fields = ['id','user','content','blog','parent_comment']
+
+class BlogSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+    slug = serializers.SlugField(read_only = True)
+    votes = serializers.SerializerMethodField()
+    class Meta:
+        model = Blog
+        fields = ['title','slug','content','author','votes','created_at','updated_at']
+
+    def get_votes(self, blog):
+        return Vote.objects.filter(blog=blog).count()

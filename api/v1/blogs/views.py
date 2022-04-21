@@ -56,12 +56,16 @@ class VoteCreate(generics.CreateAPIView, mixins.DestroyModelMixin):
             raise ValidationError('You never voted for this blog...silly!')
 
 class CommentList(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        blog = Blog.objects.get(slug=self.kwargs['slug'])
+        return Comment.objects.filter(blog=blog)
+    
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        blog = Blog.objects.get(slug=self.kwargs['slug'])
+        serializer.save(user=self.request.user,blog=blog)
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()

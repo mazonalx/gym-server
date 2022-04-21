@@ -8,19 +8,22 @@ class VoteSerializer(serializers.ModelSerializer):
         fields = ['id']
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='author.username')
-    blog = serializers.ReadOnlyField(source='blog.slug')
+    user = serializers.ReadOnlyField(source='user.username')
+    blog = serializers.ReadOnlyField(source='blog.id')
     class Meta:
         model = Comment
-        fields = ['id','user','content','blog','parent_comment']
+        fields = ['id','user','content','blog','parent_comment','created_at','updated_at']
 
-class BlogSerializer(serializers.ModelSerializer):
+class BlogSerializer(serializers.HyperlinkedModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
-    slug = serializers.SlugField(read_only = True)
+    #slug = serializers.SlugField(read_only = True)
     votes = serializers.SerializerMethodField()
     class Meta:
         model = Blog
-        fields = ['title','slug','content','author','votes','created_at','updated_at']
+        fields = ['url','id','title','author','votes','created_at','updated_at']
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
 
     def get_votes(self, blog):
         return Vote.objects.filter(blog=blog).count()
